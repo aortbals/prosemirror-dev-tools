@@ -24,17 +24,18 @@
 
 ## Table of Content
 
-* [Quick Start](#quick-start)
-* [Features](#features)
-  * [State](#state)
-  * [History](#history)
-  * [Plugins](#plugins)
-  * [Schema](#schema)
-  * [Structure](#structure)
-  * [Snapshots](#snapshots)
-* [Demo](#demo)
-* [Contributing](#contributing)
-* [License](#license)
+- [Quick Start](#quick-start)
+- [Features](#features)
+  - [State](#state)
+  - [History](#history)
+  - [Plugins](#plugins)
+  - [Schema](#schema)
+  - [Structure](#structure)
+  - [Snapshots](#snapshots)
+  - [Custom Tabs](#custom-tabs)
+- [Demo](#demo)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Quick Start
 
@@ -79,19 +80,19 @@ ProseMirrorDevTools.applyDevTools(view, { EditorState: EditorState });
 
 ### State
 
-* Inspect document – all nodes and marks
-* Inspect selection – position, head, anchor and etc.
-* Inspect active marks
-* See document stats – size, child count
+- Inspect document – all nodes and marks
+- Inspect selection – position, head, anchor and etc.
+- Inspect active marks
+- See document stats – size, child count
 
 ![prosemirror-dev-tools state tab](/docs/assets/state-tab.png)
 
 ### History
 
-* Inspect document changes over time
-* Time travel between states
-* See selection content for particular state in time
-* See selection diff
+- Inspect document changes over time
+- Time travel between states
+- See selection content for particular state in time
+- See selection diff
 
 ![prosemirror-dev-tools history tab](/docs/assets/history-tab.png)
 
@@ -121,9 +122,52 @@ stored in local storage.
 
 ![prosemirror-dev-tools snapshots tab](/docs/assets/snapshots-tab.png)
 
+### Custom Tabs
+
+Prosemirror Dev Tools supports the ability to inject custom tab panels. Here is an example injecting a custom tab that shows the document in a storage format:
+
+```javascript
+import applyDevTools, {
+  SplitView,
+  SplitViewCol,
+  HeadingWithButton,
+  Heading,
+  HeadingButton,
+  JSONTree
+} from "prosemirror-dev-tools";
+
+applyDevTools(editorView, {
+  customTabs: [
+    {
+      id: "output",
+      name: "Document Output",
+      renderPanel() {
+        return (
+          <SplitView>
+            <SplitViewCol grow>
+              <HeadingWithButton>
+                <Heading>Current Output</Heading>
+                <HeadingButton
+                  onClick={() =>
+                    console.log(JSON.stringify(transformedDoc, null, 2))
+                  }
+                >
+                  Log Output
+                </HeadingButton>
+              </HeadingWithButton>
+              <JSONTree data={transformedDoc} hideRoot={false} />
+            </SplitViewCol>
+          </SplitView>
+        );
+      }
+    }
+  ]
+});
+```
+
 ## Demo
 
-* [Demo & Example Setup](https://codesandbox.io/s/l9n6667ooz)
+- [Demo & Example Setup](https://codesandbox.io/s/l9n6667ooz)
 
 ## Contributing
 
@@ -132,4 +176,4 @@ about it [here](http://commitizen.github.io/cz-cli/).
 
 ## License
 
-* **MIT** : http://opensource.org/licenses/MIT
+- **MIT** : http://opensource.org/licenses/MIT

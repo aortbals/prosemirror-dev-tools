@@ -46,7 +46,45 @@ const CloseButton = styled("button")({
 });
 CloseButton.displayName = "CloseButton";
 
-export default function DevToolsExpanded() {
+const DefaultTabs = {
+  state: {
+    renderPanel: () => <StateTab />
+  },
+  history: {
+    renderPanel: () => <HistoryTab />
+  },
+  plugins: {
+    renderPanel: () => <PluginsTab />
+  },
+  schema: {
+    renderPanel: () => <SchemaTab />
+  },
+  structure: {
+    renderPanel: () => <StructureTab />
+  },
+  snapshots: {
+    renderPanel: () => <SnapshotsTab />
+  }
+};
+
+export default function DevToolsExpanded(props = {}) {
+  const tabsById = props.customTabs
+    ? props.customTabs.reduce((o, t) => {
+        o[t.id] = t;
+        return o;
+      }, DefaultTabs)
+    : DefaultTabs;
+
+  function renderTabPanel(index) {
+    const tab = tabsById[index];
+
+    if (tab) {
+      return tab.renderPanel();
+    }
+
+    return <StateTab />;
+  }
+
   return (
     <Subscribe to={[GlobalStateContainer]}>
       {globalState => {
@@ -112,28 +150,15 @@ export default function DevToolsExpanded() {
                       <Tab index="schema">Schema</Tab>
                       <Tab index="structure">Structure</Tab>
                       <Tab index="snapshots">Snapshots</Tab>
+                      {props.customTabs &&
+                        props.customTabs.map(t => (
+                          <Tab key={t.id} index={t.id}>
+                            {t.name}
+                          </Tab>
+                        ))}
                     </TabList>
 
-                    <TabPanel>
-                      {({ index }) => {
-                        switch (index) {
-                          case "state":
-                            return <StateTab />;
-                          case "history":
-                            return <HistoryTab />;
-                          case "plugins":
-                            return <PluginsTab />;
-                          case "schema":
-                            return <SchemaTab />;
-                          case "structure":
-                            return <StructureTab />;
-                          case "snapshots":
-                            return <SnapshotsTab />;
-                          default:
-                            return <StateTab />;
-                        }
-                      }}
-                    </TabPanel>
+                    <TabPanel>{({ index }) => renderTabPanel(index)}</TabPanel>
                   </Tabs>
                 </DockContainer>
               )}

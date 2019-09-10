@@ -5,6 +5,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "unstated";
 import DevTools from "./dev-tools";
 import EditorStateContainer from "./state/editor";
+import JSONTree from "./components/json-tree";
 
 const DEVTOOLS_CLASS_NAME = "__prosemirror-dev-tools__";
 
@@ -31,11 +32,17 @@ function applyDevTools(editorView, props) {
 
   ReactDOM.render(
     <Provider inject={[editorState]}>
-      <DevTools />
+      <DevTools customTabs={props ? props.customTabs : undefined} />
     </Provider>,
     place
   );
 }
 
 export default applyDevTools;
-export { applyDevTools };
+export { applyDevTools, JSONTree };
+export { SplitView, SplitViewCol } from "./components/split-view";
+export {
+  Heading,
+  HeadingButton,
+  HeadingWithButton
+} from "./components/heading";
