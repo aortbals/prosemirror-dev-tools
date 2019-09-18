@@ -158,7 +158,15 @@ export default function DevToolsExpanded(props = {}) {
                         ))}
                     </TabList>
 
-                    <TabPanel>{({ index }) => renderTabPanel(index)}</TabPanel>
+                    <Subscribe to={[EditorStateContainer]}>
+                      {editorState => (
+                        <TabPanel>
+                          {({ index }) =>
+                            renderTabPanel({ index, editorState })
+                          }
+                        </TabPanel>
+                      )}
+                    </Subscribe>
                   </Tabs>
                 </DockContainer>
               )}
