@@ -149,7 +149,16 @@ function DevToolsExpanded() {
     var tab = tabsById[index];
 
     if (tab) {
-      return tab.renderPanel();
+      if (tab.subscribeToEditorState) {
+        return _react2.default.createElement(
+          _unstated.Subscribe,
+          { to: [_editor2.default] },
+          function(editorState) {
+            return tab.renderPanel({ index: index, editorState: editorState });
+          }
+        );
+      }
+      return tab.renderPanel({ index: index });
     }
 
     return _react2.default.createElement(_state2.default, null);
@@ -281,23 +290,12 @@ function DevToolsExpanded() {
                       );
                     })
                 ),
-                _react2.default.createElement(
-                  _unstated.Subscribe,
-                  { to: [_editor2.default] },
-                  function(editorState) {
-                    return _react2.default.createElement(
-                      _tabs.TabPanel,
-                      null,
-                      function(_ref4) {
-                        var index = _ref4.index;
-                        return renderTabPanel({
-                          index: index,
-                          editorState: editorState
-                        });
-                      }
-                    );
-                  }
-                )
+                _react2.default.createElement(_tabs.TabPanel, null, function(
+                  _ref4
+                ) {
+                  var index = _ref4.index;
+                  return renderTabPanel(index);
+                })
               )
             );
           }
