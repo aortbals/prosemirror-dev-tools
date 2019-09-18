@@ -281,12 +281,23 @@ function DevToolsExpanded() {
                       );
                     })
                 ),
-                _react2.default.createElement(_tabs.TabPanel, null, function(
-                  _ref4
-                ) {
-                  var index = _ref4.index;
-                  return renderTabPanel(index);
-                })
+                _react2.default.createElement(
+                  _unstated.Subscribe,
+                  { to: [_editor2.default] },
+                  function(editorState) {
+                    return _react2.default.createElement(
+                      _tabs.TabPanel,
+                      null,
+                      function(_ref4) {
+                        var index = _ref4.index;
+                        return renderTabPanel({
+                          index: index,
+                          editorState: editorState
+                        });
+                      }
+                    );
+                  }
+                )
               )
             );
           }
