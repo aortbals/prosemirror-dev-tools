@@ -79,7 +79,14 @@ export default function DevToolsExpanded(props = {}) {
     const tab = tabsById[index];
 
     if (tab) {
-      return tab.renderPanel();
+      if (tab.subscribeToEditorState) {
+        return (
+          <Subscribe to={[EditorStateContainer]}>
+            {editorState => tab.renderPanel({ index, editorState })}
+          </Subscribe>
+        );
+      }
+      return tab.renderPanel({ index });
     }
 
     return <StateTab />;
@@ -158,15 +165,7 @@ export default function DevToolsExpanded(props = {}) {
                         ))}
                     </TabList>
 
-                    <Subscribe to={[EditorStateContainer]}>
-                      {editorState => (
-                        <TabPanel>
-                          {({ index }) =>
-                            renderTabPanel({ index, editorState })
-                          }
-                        </TabPanel>
-                      )}
-                    </Subscribe>
+                    <TabPanel>{({ index }) => renderTabPanel(index)}</TabPanel>
                   </Tabs>
                 </DockContainer>
               )}
